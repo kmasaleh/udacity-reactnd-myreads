@@ -3,13 +3,13 @@
     width: 150px;
     height: 200px;
     padding: 0px;
-    margin: 20px;
+    margin: 50px;
     position: relative;
     display: inline-block;
     vertical-align:top ;
-    -webkit-box-shadow: 5px 5px 15px 5px #FF8080, -9px 5px 15px 5px #FFE488, -7px -5px 15px 5px #8CFF85, 12px -5px 15px 5px #80C7FF, 12px 10px 15px 7px #E488FF, -10px 10px 15px 7px #FF616B, -10px -7px 27px 1px #8E5CFF, 5px 5px 15px 5px rgba(0,0,0,0); 
-    box-shadow: 5px 5px 15px 5px #FF8080, -9px 5px 
-}
+
+    -webkit-box-shadow: 5px 5px 15px 5px #000000; 
+    box-shadow: 5px 5px 15px 5px #000000;}
 
 .thumb-container img{
     width:100%;
@@ -22,8 +22,8 @@
 }
 
 .title{
-    padding-top: 10px;
-    font-weight: 700;
+    padding-top: 15px;
+    font-weight: 400;
 }
 .title,
 .author{
