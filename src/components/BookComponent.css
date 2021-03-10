@@ -22,23 +22,21 @@
 }
 
 .title{
-    padding-top: 15px;
+    padding-top: 20px;
     font-weight: 400;
-}
-.title,
-.author{
-    font-size: 12px;
-    
+    font-size: 0.8em;
 }
 .author{
     color: gray;
+    font-size: 0.7em;
 }
+
 .bottom-right {
     position: absolute;
     bottom: 0;
     right: 0;
     cursor: pointer;
-    color: rgb(28, 52, 192);
+    color: rgb(28, 192, 28);
     margin-right: -10px;
     margin-bottom: -10px;
 }

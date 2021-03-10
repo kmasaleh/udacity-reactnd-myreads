@@ -1,48 +1,106 @@
 import { Component } from 'react';
 import './App.css';
 import BookShelfComponent from './components/BookShelfComponent'
-import {BookInfo} from './components/BookComponent'
+import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
+import SearchComponent from './components/SearchComponent';
+import Icon from '@material-ui/core/Icon';
+import {BookInfo, BookStatus,fromRawBooksToInfoBooks,mergeSearchWithUserBooks, mergeUserBooksWithSearch} from './../src/utilities/BookInfo'
+import {search} from './BooksAPI';
 
 var books = require('./books-mock.json').books; //(with path)
 
-var bookStore =[];
+//var userBookStore =[];
 class  App extends Component {
   constructor(props){
     super(props);
     
-    this. allBooks =books
-              .map((book)=>{
-                    let bookinfo = new BookInfo();
-                    bookinfo.thumb = book.imageLinks.thumbnail;
-                    bookinfo.title = book.title;
-                    bookinfo.authors  = book.authors;
-                    bookinfo.id  = book.id;
-                    return bookinfo;
-              });
-    //this.callMeBack.bind(this);
+    this.state = {
+      userBookStore : null ,
+      searchResultBooks : new Array() ,
+      searchOpened :false
+    }
+
+    //this.userBookStore = fromRawBooksToInfoBooks(books);
+    this.searchResultBooks =null;
+    this.searchOpened=false;
+
   }
-  callMeBack= (bookInfo)=>{
-//    var books = bookStore.filter(b=> b.id===bookInfo.id);
-  //  if(books.length===0)
-    //  bookStore.push(bookInfo);
-    var f = this.allBooks.length;
+
+  getReadBooks(){
+    return  this.userBookStore?.filter(f=>f.status===BookStatus.Read);
+  }
+  getWanttoReadBooks(){
+    return this.userBookStore?.filter(f=>f.status===BookStatus.WantToRead);
+  }
+  getReadingBooks(){
+    return this.userBookStore?.filter(f=>f.status===BookStatus.Reading);
+  }
+
+  refreshViews= ()=>{
     this.forceUpdate();
   }
 
+  applySearch =(text)=>{
+    if(text===null || text==="")
+    {
+      //get all
+    }
+    else{
+      search(text).then((books)=>{
+          let searchBooks = fromRawBooksToInfoBooks(books);
+          //let s = { searchResults : mergeSearchWithUserBooks(searchBooks,this.userBookStore)};
+          //this.setState(s);
+          this.searchResultBooks = mergeSearchWithUserBooks(searchBooks,this.userBookStore);
+          //this.userBookStore = s;
+          this.forceUpdate();
+      });
+    }
+}
+
+closeSearch = ()=>{
+  this.userBookStore = mergeUserBooksWithSearch(this.searchResultBooks,this.userBookStore);
+  this.searchResultBooks =null;
+  this.setState({searchOpened:false});
+}
+openSearch =()=>{
+  this.setState({searchOpened:true});
+//  this.searchOpened=true;
+}
+
+drawShelves = ()=> {
+  var infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
+  var infoCurentlyReading = { books :this.getReadBooks(),title:"Curently Reading", refresh:this.refreshViews}       
+  var infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
+  return (
+    <div>
+   
+      <BookShelfComponent  info={infoWanttoRead}> </BookShelfComponent>
+      <BookShelfComponent  info={infoCurentlyReading}> </BookShelfComponent>
+      <BookShelfComponent  info={infoRead}></BookShelfComponent>
+    </div>
+  );
+}
   render(){
-     var infoNone = { books :this.allBooks.filter(f=>f.status===0),title:"None", call:this.callMeBack} ;          
-     var infoWanttoRead = { books :this.allBooks.filter(f=>f.status===1),title:"Want To Read", call:this.callMeBack} ;
-     var infoCurentlyReading = { books :this.allBooks.filter(f=>f.status===2),title:"Curently Reading", call:this.callMeBack}       
-     var infoRead = { books :this.allBooks.filter(f=>f.status===3),title:"Read", call:this.callMeBack}       
     return (
       <div className="App">
-          <BookShelfComponent  info={infoNone}/>
-          <BookShelfComponent  info={infoWanttoRead}/>
-          <BookShelfComponent  info={infoCurentlyReading}/>
-          <BookShelfComponent  info={infoRead}/>
+          { this.state.searchOpened &&
+            (<SearchComponent search={this.applySearch} close={this.closeSearch} searchResults={this.searchResultBooks}></SearchComponent>)
+          }
+           
+           {
+            this.state.searchOpened===false &&  this.drawShelves()
+          }        
+          <LibraryAddIcon style={{ fontSize: 35 }} className='add' onClick={this.openSearch}></LibraryAddIcon>
+          <Icon  style={{fontSize: 64,color: 'red'}}>add_circle</Icon>
       </div>
     );
   }
 }
+/*
+          <BookShelfComponent  info={infoNone}/>
+          <BookShelfComponent  info={infoWanttoRead}/>
+          <BookShelfComponent  info={infoCurentlyReading}/>
+          <BookShelfComponent  info={infoRead}/>
 
+*/
 export default App;

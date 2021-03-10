@@ -1,8 +1,16 @@
 .App {
   text-align: center;
+  position: relative;
 }
 
 
 @media (prefers-reduced-motion: no-preference) {
 }
 
+.add{
+  position: absolute;
+  right: 50px;
+  bottom: 50px;
+  font-size: 64;
+  color: red;
+}

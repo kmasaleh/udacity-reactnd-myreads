@@ -17,8 +17,8 @@ class BookShelfComponent extends  Component{
             <div className='shelf-container'>
                 <div className='shelf-title'>{info.title}</div>
                 {
-                  info.books.map((bookinfo)=>{
-                        return <BookComponent key={bookinfo.id} book={bookinfo} call={i=>info.call(i)}/>
+                  info.books?.length>0 && info.books.map((bookinfo)=>{
+                        return <BookComponent key={bookinfo.id} book={bookinfo} refresh={info.refresh}/>
                   })
                    
                 }
