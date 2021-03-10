@@ -7,6 +7,7 @@ export const  BookStatus ={
 export class BookInfo {
     constructor(){
         this.title="";
+        this.subtitle="";
         this.authors =[];
         this.thumb="";
         this.id="";
@@ -33,15 +34,19 @@ export const mergeSearchWithUserBooks = (searchBooks,userBooks)=>{
 export const mergeUserBooksWithSearch = (searchBooks,userBooks)=>{
     if(searchBooks === null || searchBooks===undefined)    
         return null;
-    if(userBooks!==null && userBooks!==undefined)
-            userBooks = new Array();
 
     searchBooks.map(book=>{
-        let t = userBooks.filter(b=>b.id===book.id)[0];
-        if(t==null) userBooks.push(book);
-        if(t && book.status!==BookStatus.None) t.status = book.status;
+        if(userBooks!==null && userBooks!==undefined){
+            let t = userBooks.filter(b=>b.id===book.id)[0];
+            if(t && book.status!==BookStatus.None) t.status = book.status;
+            if(t==null) userBooks.push(book);
+        }
+        else{
+            userBooks = new Array();
+            if(book.status!==BookStatus.None)
+                userBooks.push(book);
+        }
     })
-
     let userBooksWithShelfOnly =[] ;
     userBooks.map(b=> {
         if(b.status!==BookStatus.None)

@@ -5,7 +5,7 @@ import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import SearchComponent from './components/SearchComponent';
 import Icon from '@material-ui/core/Icon';
 import {BookInfo, BookStatus,fromRawBooksToInfoBooks,mergeSearchWithUserBooks, mergeUserBooksWithSearch} from './../src/utilities/BookInfo'
-import {search} from './BooksAPI';
+import {search,getAll} from './BooksAPI';
 
 var books = require('./books-mock.json').books; //(with path)
 
@@ -43,7 +43,11 @@ class  App extends Component {
   applySearch =(text)=>{
     if(text===null || text==="")
     {
-      //get all
+      getAll().then((books)=>{
+        let searchBooks = fromRawBooksToInfoBooks(books);
+        this.searchResultBooks = mergeSearchWithUserBooks(searchBooks,this.userBookStore);
+        this.forceUpdate();
+    });
     }
     else{
       search(text).then((books)=>{
@@ -69,7 +73,7 @@ openSearch =()=>{
 
 drawShelves = ()=> {
   var infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
-  var infoCurentlyReading = { books :this.getReadBooks(),title:"Curently Reading", refresh:this.refreshViews}       
+  var infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
   var infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
   return (
     <div>
@@ -91,16 +95,13 @@ drawShelves = ()=> {
             this.state.searchOpened===false &&  this.drawShelves()
           }        
           <LibraryAddIcon style={{ fontSize: 35 }} className='add' onClick={this.openSearch}></LibraryAddIcon>
-          <Icon  style={{fontSize: 64,color: 'red'}}>add_circle</Icon>
+          
       </div>
     );
   }
 }
 /*
-          <BookShelfComponent  info={infoNone}/>
-          <BookShelfComponent  info={infoWanttoRead}/>
-          <BookShelfComponent  info={infoCurentlyReading}/>
-          <BookShelfComponent  info={infoRead}/>
+<Icon  style={{fontSize: 64,color: 'red'}}>add_circle</Icon>
 
 */
 export default App;

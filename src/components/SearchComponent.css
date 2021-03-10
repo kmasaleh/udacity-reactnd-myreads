@@ -1,0 +1,6 @@
+.search-container{
+    height: 50px;    
+}
+.search-container input{
+    height: 50px !important;
+}

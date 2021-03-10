@@ -27,7 +27,7 @@ class SearchComponent extends  Component{
             refresh:null
         };
         return (
-            <div >
+            <div className="search-container">
                 <button onClick={this.props.close}> close</button>
                 <input type='text' placeholder="Search by title or author" onChange={
                     ($event)=>this.handleChange($event.target.value)
