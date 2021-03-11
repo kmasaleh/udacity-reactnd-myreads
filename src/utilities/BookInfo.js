@@ -24,7 +24,7 @@ export const mergeSearchWithUserBooks = (searchBooks,userBooks)=>{
     searchBooks?.map(book=>{
         let t = userBooks.filter(b=>b.id===book.id)[0];
         if(t)
-            book.status = t.status;
+            book.shelf = t.shelf;
 
         return book;    
     })
@@ -53,7 +53,7 @@ export const mergeUserBooksWithSearch = (searchBooks,userBooks)=>{
     userBooks.map(b=> {
         if(b.status!==BookStatus.None)
             userBooksWithShelfOnly.push(b);
-
+        return b;    
     })
     return userBooksWithShelfOnly;
 }
@@ -62,6 +62,8 @@ export const fromRawBooksToInfoBooks = (rawBooks)=>{
     if(!Array.isArray(rawBooks))
         return null;
     return rawBooks.map((book)=>{
+        if(book===undefined)
+            return undefined;
         let bookinfo = new BookInfo();
         bookinfo.thumb = book.imageLinks.thumbnail;
         bookinfo.title = book.title;

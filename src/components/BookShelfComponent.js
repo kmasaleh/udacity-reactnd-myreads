@@ -16,12 +16,18 @@ class BookShelfComponent extends  Component{
         return (
             <div className='shelf-container'>
                 <div className='shelf-title'>{info.title}</div>
+                <ul>
                 {
                   info.books?.length>0 && info.books.map((bookinfo)=>{
-                        return <BookComponent key={bookinfo.id} book={bookinfo} refresh={info.refresh}/>
+                        return (
+                        <li key={bookinfo?.id}>
+                            <BookComponent   book={bookinfo} refreshParent={info.refresh}/>
+                        </li>
+                        )
                   })
                    
                 }
+                </ul>
 
             </div>
         )

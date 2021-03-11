@@ -7,13 +7,6 @@
 @media (prefers-reduced-motion: no-preference) {
 }
 
-.add{
-  position: fixed;
-  right: 50px;
-  bottom: 50px;
-  font-size: 64;
-  color: red;
-}
 
 header{
   left: 0;

@@ -2,28 +2,31 @@ import React,{Component} from 'react';
 import './BookComponent.css';
 import Icon from '@material-ui/core/Icon';
 import { BookStatus } from '../utilities/BookInfo';
+import {update} from './../BooksAPI';
 
 class BookComponent extends  Component{
     constructor(props){
         super(props);
-        /*
-        this.state = {
-            book: props.book   
-        }*/
         this.changeStatus.bind(this);
     }
     componentDidUpdate(prevProps, prevState, snapshot){
-        //console.log(`book shelf status is : ${this.state.ShelfStatus}`);
+ 
     }
     changeStatus(obj){
-        const  {refresh,book } = this.props;
+        const  {book ,refreshParent} = this.props;
         book.shelf =  obj.value;
-        if(refresh)
-            refresh(book);
+        if(update){
+            update(book,book.shelf)
+            .then(()=>{
+                refreshParent();
+            });
+        }
     }
 
     bookTitle = ()=>{
-        const  {book } = this.props;
+        const  {book ,refreshParent} = this.props;
+        if(book===null || book===undefined)
+            return "";
         if(book.title)
             return  book.title;
         if(book.subtitle)    
@@ -33,21 +36,19 @@ class BookComponent extends  Component{
     }
     render(){
         const  {book } = this.props;
-//<Assignment style={{ color: red[500],fontsize:50 }}></Assignment>
-//               <Icon className="fa fa-plus-circle" />  <HomeIcon />
         return(
-            <div className='book-container' key={book.id}> 
+            <div className='book-container' key={"book-container_" + book?.id}> 
                <div className='thumb-container' >
-                <img src={book?.thumb} alt='thumbnail' />
+                    <img src={book?.thumb} alt='thumbnail' />
                </div>
                <div className='title'>{this.bookTitle}</div>
                {
-                   book.authors?.map(a=> <div className='author'>{a}</div>)
+                   book.authors?.map(a=> <div key={book.id+a} className='author'>{a}</div>)
                 }
                <Icon style={{ fontSize: 35 }} className='bottom-right' >assignment</Icon>
                <select  className='menu bottom-right' onChange={ev=>this.changeStatus(ev.target)} 
-                defaultValue={this.props.book.shelf} >
-               <option value="-1" disabled="disabled">Move To</option>
+                defaultValue={this.props.book?.shelf} >
+               <option value="-1" disabled="disabled">Move To ...</option>
                     <option value= {BookStatus.None} >None</option>
                     <option value={BookStatus.WantToRead} >Want to Read</option>
                     <option value={BookStatus.Reading} >Curently Reading</option>
@@ -60,3 +61,7 @@ class BookComponent extends  Component{
 
 
 export default  BookComponent;
+
+
+//<Assignment style={{ color: red[500],fontsize:50 }}></Assignment>
+//               <Icon className="fa fa-plus-circle" />  <HomeIcon />

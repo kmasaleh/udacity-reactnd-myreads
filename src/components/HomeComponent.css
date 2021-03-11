@@ -1,0 +1,14 @@
+.Home {
+    text-align: center;
+    position: relative;
+  }
+  
+
+.add{
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    font-size: 64;
+    color: red;
+  }
+  

@@ -16,3 +16,15 @@
     text-align: center;
     margin-top: 35px;
 }
+
+ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style-type: none;
+    justify-content: center;
+}
+li{
+    flex-wrap: wrap;
+    
+}
