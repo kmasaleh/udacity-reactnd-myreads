@@ -23,7 +23,7 @@ class BookComponent extends  Component{
             this.setState({inProgressUpdate:true});
             update(book,book.shelf)
             .then(()=>{
-                refreshParent();
+                refreshParent && refreshParent();
                 this.setState({inProgressUpdate:false});
             });
         }

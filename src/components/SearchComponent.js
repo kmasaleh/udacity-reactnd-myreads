@@ -1,10 +1,11 @@
 import React,{Component} from 'react';
 import './SearchComponent.css';
+import './../App.css';
 import BookShelfComponent from './BookShelfComponent';
 import ReplyAllSharpIcon from '@material-ui/icons/ReplyAllSharp';
 import { Link } from "react-router-dom";
-import {search} from './../BooksAPI';
-import { fromRawBooksToInfoBooks} from './../utilities/BookInfo';
+import {search,getAll} from './../BooksAPI';
+import {mergeSearchWithUserBooks, fromRawBooksToInfoBooks} from './../utilities/BookInfo';
 
 class SearchComponent extends  Component{
 
@@ -17,6 +18,7 @@ class SearchComponent extends  Component{
             inProgressSearch :false,
         }
         this.userIsWriting =false;
+        this.timeout = null;
     }
 
     componentDidMount(){
@@ -25,24 +27,32 @@ class SearchComponent extends  Component{
 
     handleChange= (text)=>{
         let t= text;
-        if(this.userIsWriting)
-            return;
+        //if(this.userIsWriting)
+          //  return;
         let That =this;    
-        setTimeout(()=>{
+        
+        clearTimeout(this.timeout);
+        this.timeout= setTimeout(()=>{
             That.setState({searchText:t});
-            That.userIsWriting=false;
+        //    That.userIsWriting=false;
             That.applySearch2();
             t="";
-        },400)    
+        },600)    
     }
 
     
     applySearch2 = ()=>{
         this.setState({inProgressSearch:true});
+        let userBooks = [];
+        getAll()
+        .then((rawBooks)=>fromRawBooksToInfoBooks(rawBooks))
+        .then(books=>userBooks=books)
+        .catch(error=> {
+            alert(error);
+        });
         search(this.state.searchText)
-        .then((rawbooks)=>{
-            return fromRawBooksToInfoBooks(rawbooks);
-        })
+        .then((rawbooks)=>fromRawBooksToInfoBooks(rawbooks))
+        .then(searchBooks=> mergeSearchWithUserBooks(searchBooks,userBooks))
         .then(books=> {
             this.setState({searchResults:books})
             this.setState({inProgressSearch:false});

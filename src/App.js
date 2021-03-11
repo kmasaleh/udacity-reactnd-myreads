@@ -29,10 +29,6 @@ class  App extends Component {
             <span>&copy; 2021 Khaled Saleh</span>
           </header>
             
-            <Link to="/search">
-            <LibraryAddIcon style={{ fontSize: 35 }} className='add'onClick={this.openSearch}>
-            </LibraryAddIcon>
-            </Link>
           
             <Route path="/" exact component={HomeComponent} />            
             <Route path="/home" exact component={HomeComponent} />            

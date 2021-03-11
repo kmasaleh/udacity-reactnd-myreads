@@ -1,11 +1,14 @@
 import { Component } from 'react';
 import './HomeComponent.css';
+import './../App.css';
 import BookShelfComponent from './BookShelfComponent';
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
-import { BookStatus,fromRawBooksToInfoBooks,mergeSearchWithUserBooks } from './../utilities/BookInfo';
-import {search,getAll,update} from './../BooksAPI';
-import { BrowserRouter as Router,Link,Route } from "react-router-dom";
-import SearchComponent from './SearchComponent';
+import { BookStatus,fromRawBooksToInfoBooks} from './../utilities/BookInfo';
+import {getAll} from './../BooksAPI';
+import { Link } from "react-router-dom";
+
+
+
 class  HomeComponent extends Component {
   constructor(props){
     super(props);
@@ -74,5 +77,4 @@ class  HomeComponent extends Component {
         );
     }
 }
-
 export default HomeComponent;
