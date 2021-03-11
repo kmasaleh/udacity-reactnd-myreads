@@ -1,18 +1,11 @@
 import React,{Component} from 'react';
 import './BookComponent.css';
 import Icon from '@material-ui/core/Icon';
-import {AssignmentIcon}  from '@material-ui/icons/Assignment';
-
-
-
-
-
-export let UserBooks =  [];
 
 class BookComponent extends  Component{
     constructor(props){
         super(props);
-/*
+        /*
         this.state = {
             book: props.book   
         }*/
@@ -42,21 +35,22 @@ class BookComponent extends  Component{
 //<Assignment style={{ color: red[500],fontsize:50 }}></Assignment>
 //               <Icon className="fa fa-plus-circle" />  <HomeIcon />
         return(
-            <div className='book-container'> 
-               <div className='thumb-container'>
-                <img src={book.thumb} alt='thumbnail'/>
+            <div className='book-container' key={book.id}> 
+               <div className='thumb-container' >
+                <img src={book?.thumb} alt='thumbnail' />
                </div>
                <div className='title'>{this.bookTitle}</div>
                {
                    book.authors?.map(a=> <div className='author'>{a}</div>)
                 }
                <Icon style={{ fontSize: 35 }} className='bottom-right' >assignment</Icon>
-               <select  className='menu bottom-right' onChange={ev=>this.changeStatus(ev.target)}>
+               <select  className='menu bottom-right' onChange={ev=>this.changeStatus(ev.target)} 
+                defaultValue={this.props.book.status.toString()} >
                <option value="-1" disabled="disabled">Move To</option>
-                    <option value="0" selected={this.props.book.status===0}>None</option>
-                    <option value="1" selected={this.props.book.status===1}>Want to Read</option>
-                    <option value="2" selected={this.props.book.status===2}>Curently Reading</option>
-                    <option value="3" selected={this.props.book.status===3}>Read</option>
+                    <option value="0" >None</option>
+                    <option value="1" >Want to Read</option>
+                    <option value="2" >Curently Reading</option>
+                    <option value="3" >Read</option>
                 </select>
             </div>
         );

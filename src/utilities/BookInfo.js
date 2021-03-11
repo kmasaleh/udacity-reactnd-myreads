@@ -42,7 +42,7 @@ export const mergeUserBooksWithSearch = (searchBooks,userBooks)=>{
             if(t==null) userBooks.push(book);
         }
         else{
-            userBooks = new Array();
+            userBooks = [];
             if(book.status!==BookStatus.None)
                 userBooks.push(book);
         }

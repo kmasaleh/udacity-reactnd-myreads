@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
-import './BookShelfComponent.css';
+import './SearchComponent.css';
 import BookShelfComponent from './BookShelfComponent';
+import ReplyAllSharpIcon from '@material-ui/icons/ReplyAllSharp';
 
 class SearchComponent extends  Component{
     constructor(props){
@@ -8,17 +9,42 @@ class SearchComponent extends  Component{
 
         this.state = {
             searchText:"" ,
-            searchResults :this.props.books   
+            searchResults :this.props.books,
+            inProgressSearch :false
         }
+        this.inProgressSearch =false;
+        this.userIsWriting =false;
     }
 
     handleChange= (text)=>{
-        this.setState({searchText:text});
+        let t= text;
+        if(this.userIsWriting)
+            return;
+        let That =this;    
+        setTimeout(()=>{
+            That.setState({searchText:t});
+            That.userIsWriting=false;
+            That.applySearch();
+            t="";
+        },400)    
+
+        
     }
 
     applySearch =()=>{
+        let That =this;
+        this.setState({inProgressSearch:true});
+        //this.inProgressSearch=true;
         const {search} = this.props;
-        search(this.state.searchText);
+        search(this.state.searchText)
+        .then(()=> {
+            this.setState({inProgressSearch:false});
+            //That.inProgressSearch=false
+        })
+        .catch(e=> {
+            this.setState({inProgressSearch:false});
+            //That.inProgressSearch=false
+        });
     }
     render(){
         let info ={
@@ -27,17 +53,20 @@ class SearchComponent extends  Component{
             refresh:null
         };
         return (
-            <div className="search-container">
-                <button onClick={this.props.close}> close</button>
-                <input type='text' placeholder="Search by title or author" onChange={
-                    ($event)=>this.handleChange($event.target.value)
-                }></input>
-                <button onClick={this.applySearch}>Serach</button>
+            <div>
+                <div className="search-container">
+                    <ReplyAllSharpIcon style={{ fontSize: 35 }} className="close-search" onClick={this.props.close}></ReplyAllSharpIcon>
+                    <input type='text' placeholder="Search by title or author" 
+                        onChange={($event)=>this.handleChange($event.target.value)}>
+                    </input>
+                </div>
+                <div className="loader" style={{display:this.state.inProgressSearch?'block':'none'}}></div>
+                
+
                 <BookShelfComponent info={info}/>
             </div>
         )
     }
 }
-
-
+//{this.inProgressSearch && (<div className="loader"></div>) }
 export default SearchComponent;

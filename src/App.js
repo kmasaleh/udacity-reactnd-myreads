@@ -3,11 +3,10 @@ import './App.css';
 import BookShelfComponent from './components/BookShelfComponent'
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import SearchComponent from './components/SearchComponent';
-import Icon from '@material-ui/core/Icon';
-import {BookInfo, BookStatus,fromRawBooksToInfoBooks,mergeSearchWithUserBooks, mergeUserBooksWithSearch} from './../src/utilities/BookInfo'
+import { BookStatus,fromRawBooksToInfoBooks,mergeSearchWithUserBooks, mergeUserBooksWithSearch} from './../src/utilities/BookInfo'
 import {search,getAll} from './BooksAPI';
 
-var books = require('./books-mock.json').books; //(with path)
+//var books = require('./books-mock.json').books; //(with path)
 
 //var userBookStore =[];
 class  App extends Component {
@@ -16,7 +15,7 @@ class  App extends Component {
     
     this.state = {
       userBookStore : null ,
-      searchResultBooks : new Array() ,
+      searchResultBooks : [],
       searchOpened :false
     }
 
@@ -41,24 +40,34 @@ class  App extends Component {
   }
 
   applySearch =(text)=>{
-    if(text===null || text==="")
-    {
-      getAll().then((books)=>{
-        let searchBooks = fromRawBooksToInfoBooks(books);
-        this.searchResultBooks = mergeSearchWithUserBooks(searchBooks,this.userBookStore);
-        this.forceUpdate();
-    });
-    }
-    else{
-      search(text).then((books)=>{
+
+    let p = new Promise((resolve,reject)=>{
+      if(text===null || text==="")
+      {
+        getAll()
+        .then((books)=>{
           let searchBooks = fromRawBooksToInfoBooks(books);
-          //let s = { searchResults : mergeSearchWithUserBooks(searchBooks,this.userBookStore)};
-          //this.setState(s);
           this.searchResultBooks = mergeSearchWithUserBooks(searchBooks,this.userBookStore);
-          //this.userBookStore = s;
           this.forceUpdate();
-      });
-    }
+          resolve();
+        })
+        .catch(error=> reject(error));
+      }
+      else{
+        search(text)
+        .then((books)=>{
+            let searchBooks = fromRawBooksToInfoBooks(books);
+            //let s = { searchResults : mergeSearchWithUserBooks(searchBooks,this.userBookStore)};
+            //this.setState(s);
+            this.searchResultBooks = mergeSearchWithUserBooks(searchBooks,this.userBookStore);
+            //this.userBookStore = s;
+            this.forceUpdate();
+            resolve();
+        })
+        .catch(error=> reject(error));
+      }
+    });
+    return p;
 }
 
 closeSearch = ()=>{
@@ -77,14 +86,17 @@ drawShelves = ()=> {
   var infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
   return (
     <div>
-   
-      <BookShelfComponent  info={infoWanttoRead}> </BookShelfComponent>
-      <BookShelfComponent  info={infoCurentlyReading}> </BookShelfComponent>
-      <BookShelfComponent  info={infoRead}></BookShelfComponent>
+      <BookShelfComponent  info={infoWanttoRead}/> 
+      <BookShelfComponent  info={infoCurentlyReading}/> 
+      <BookShelfComponent  info={infoRead}/>
     </div>
   );
 }
   render(){
+    var infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
+    var infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
+    var infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
+  
     return (
       <div className="App">
           { this.state.searchOpened &&
@@ -92,7 +104,16 @@ drawShelves = ()=> {
           }
            
            {
-            this.state.searchOpened===false &&  this.drawShelves()
+            this.state.searchOpened===false && 
+            (
+              <div>
+                <BookShelfComponent  info={infoWanttoRead}/> 
+                <BookShelfComponent  info={infoCurentlyReading}/> 
+                <BookShelfComponent  info={infoRead}/>
+              </div>
+            )
+            
+            //this.drawShelves()
           }        
           <LibraryAddIcon style={{ fontSize: 35 }} className='add' onClick={this.openSearch}></LibraryAddIcon>
           
