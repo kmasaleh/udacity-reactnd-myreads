@@ -7,6 +7,10 @@ import {update} from './../BooksAPI';
 class BookComponent extends  Component{
     constructor(props){
         super(props);
+        this.state = {
+            inProgressUpdate:false
+          }
+      
         this.changeStatus.bind(this);
     }
     componentDidUpdate(prevProps, prevState, snapshot){
@@ -16,9 +20,11 @@ class BookComponent extends  Component{
         const  {book ,refreshParent} = this.props;
         book.shelf =  obj.value;
         if(update){
+            this.setState({inProgressUpdate:true});
             update(book,book.shelf)
             .then(()=>{
                 refreshParent();
+                this.setState({inProgressUpdate:false});
             });
         }
     }
@@ -38,6 +44,7 @@ class BookComponent extends  Component{
         const  {book } = this.props;
         return(
             <div className='book-container' key={"book-container_" + book?.id}> 
+               <div className="loader" style={{display:this.state.inProgressUpdate?'block':'none'}}></div>
                <div className='thumb-container' >
                     <img src={book?.thumb} alt='thumbnail' />
                </div>
