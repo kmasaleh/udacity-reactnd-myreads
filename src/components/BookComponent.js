@@ -48,7 +48,7 @@ class BookComponent extends  Component{
                <div className='thumb-container' >
                     <img src={book?.thumb} alt='thumbnail' />
                </div>
-               <div className='title'>{this.bookTitle}</div>
+               <div className='title'>{this.bookTitle()}</div>
                {
                    book.authors?.map(a=> <div key={book.id+a} className='author'>{a}</div>)
                 }

@@ -1,4 +1,4 @@
-# MyRead Project  
+# Udacity Advanced Web Development Nano Degree MyRead Project  
 ### Author : Khaaled Saleh  
 ###  Date:   11/03/2021  
 

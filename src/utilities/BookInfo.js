@@ -65,7 +65,7 @@ export const fromRawBooksToInfoBooks = (rawBooks)=>{
         if(book===undefined)
             return undefined;
         let bookinfo = new BookInfo();
-        bookinfo.thumb = book.imageLinks.thumbnail;
+        bookinfo.thumb = book.imageLinks?.thumbnail;
         bookinfo.title = book.title;
         bookinfo.subtitle = book.subtitle;
         bookinfo.authors  = book.authors;
