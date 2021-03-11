@@ -1,11 +1,20 @@
 
 
-# Udacity Advanced Web Development Nano Degree 
+# Udacity Advanced Frontend Web Development Nano Degree 
 # MyReads: A Book Lending App
-### Author : Khaaled Saleh  
+### Author : Khaled Saleh  
 ###  Date:   11/03/2021  
 
 ### ___________________________________________ 
+## Project Overview
+In the MyReads project, we create a bookshelf app that allows you to select and categorize books you have read, are currently reading, or want to read. The project emphasizes using React to build the application and provides an API server and client library that you will use to persist information as you interact with the application.
+
+## Vision
+My vision was to utilize React features and apply OOP concepts that I learned to implement the needed functionality using  ES6 javascript classes that construct the model of a composition objects well connected that do the job.
+
+By doing this I got a great benefit from the encapsulation fetaure of ES6 classes then easly applying the DRY and separation of concerns principles inside my code, that led me to complete the project in just three days.
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
