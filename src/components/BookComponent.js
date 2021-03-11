@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import './BookComponent.css';
 import Icon from '@material-ui/core/Icon';
+import { BookStatus } from '../utilities/BookInfo';
 
 class BookComponent extends  Component{
     constructor(props){
@@ -16,9 +17,9 @@ class BookComponent extends  Component{
     }
     changeStatus(obj){
         const  {refresh,book } = this.props;
-        book.status =  parseInt(obj.value,10);
+        book.shelf =  obj.value;
         if(refresh)
-            refresh();
+            refresh(book);
     }
 
     bookTitle = ()=>{
@@ -45,12 +46,12 @@ class BookComponent extends  Component{
                 }
                <Icon style={{ fontSize: 35 }} className='bottom-right' >assignment</Icon>
                <select  className='menu bottom-right' onChange={ev=>this.changeStatus(ev.target)} 
-                defaultValue={this.props.book.status.toString()} >
+                defaultValue={this.props.book.shelf} >
                <option value="-1" disabled="disabled">Move To</option>
-                    <option value="0" >None</option>
-                    <option value="1" >Want to Read</option>
-                    <option value="2" >Curently Reading</option>
-                    <option value="3" >Read</option>
+                    <option value= {BookStatus.None} >None</option>
+                    <option value={BookStatus.WantToRead} >Want to Read</option>
+                    <option value={BookStatus.Reading} >Curently Reading</option>
+                    <option value={BookStatus.Read} >Read</option>
                 </select>
             </div>
         );

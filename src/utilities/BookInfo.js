@@ -1,8 +1,8 @@
 export const  BookStatus ={
-    None :0,
-    WantToRead:1,
-    Reading:2,
-    Read:3
+    None :"none",
+    WantToRead:"wantToRead",
+    Reading:"currentlyReading",
+    Read:"read"
 } 
 export class BookInfo {
     constructor(){
@@ -11,7 +11,8 @@ export class BookInfo {
         this.authors =[];
         this.thumb="";
         this.id="";
-        this.status = BookStatus.None;
+        //this.status = BookStatus.None;
+        this.shelf = BookStatus.None;
     }
 }
 //displying search want to mix the search results with user list
@@ -46,6 +47,7 @@ export const mergeUserBooksWithSearch = (searchBooks,userBooks)=>{
             if(book.status!==BookStatus.None)
                 userBooks.push(book);
         }
+        return book;
     })
     let userBooksWithShelfOnly =[] ;
     userBooks.map(b=> {
@@ -66,6 +68,7 @@ export const fromRawBooksToInfoBooks = (rawBooks)=>{
         bookinfo.subtitle = book.subtitle;
         bookinfo.authors  = book.authors;
         bookinfo.id  = book.id;
+        bookinfo.shelf = book.shelf;
         return bookinfo;
   });
 }

@@ -4,7 +4,7 @@ import BookShelfComponent from './components/BookShelfComponent'
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import SearchComponent from './components/SearchComponent';
 import { BookStatus,fromRawBooksToInfoBooks,mergeSearchWithUserBooks, mergeUserBooksWithSearch} from './../src/utilities/BookInfo'
-import {search,getAll} from './BooksAPI';
+import {search,getAll,update} from './BooksAPI';
 
 //var books = require('./books-mock.json').books; //(with path)
 
@@ -16,7 +16,8 @@ class  App extends Component {
     this.state = {
       userBookStore : null ,
       searchResultBooks : [],
-      searchOpened :false
+      searchOpened :false,
+      inProgressUpdate:false
     }
 
     //this.userBookStore = fromRawBooksToInfoBooks(books);
@@ -24,15 +25,39 @@ class  App extends Component {
     this.searchOpened=false;
 
   }
+  componentDidMount(){
+    this.getAllUserBooks();
+}
 
+  getAllUserBooks = ()=> {
+    this.setState({inProgressUpdate:true});
+    getAll()
+    .then((books)=>{
+      this.userBookStore = fromRawBooksToInfoBooks(books);
+      this.setState({inProgressUpdate:false});
+      this.forceUpdate();
+    })
+    .catch(error=> alert(error));
+
+  }
   getReadBooks(){
-    return  this.userBookStore?.filter(f=>f.status===BookStatus.Read);
+    return  this.userBookStore?.filter(f=>f.shelf===BookStatus.Read);
   }
   getWanttoReadBooks(){
-    return this.userBookStore?.filter(f=>f.status===BookStatus.WantToRead);
+    return this.userBookStore?.filter(f=>f.shelf===BookStatus.WantToRead);
   }
   getReadingBooks(){
-    return this.userBookStore?.filter(f=>f.status===BookStatus.Reading);
+    return this.userBookStore?.filter(f=>f.shelf===BookStatus.Reading);
+  }
+
+  updateBookStatus=  (book)=>{
+    this.setState({inProgressUpdate:true});
+    update(book,book.shelf)
+    .then(()=>{
+      this.setState({inProgressUpdate:false});
+      this.getAllUserBooks();
+    });
+    
   }
 
   refreshViews= ()=>{
@@ -40,46 +65,29 @@ class  App extends Component {
   }
 
   applySearch =(text)=>{
-
     let p = new Promise((resolve,reject)=>{
-      if(text===null || text==="")
-      {
-        getAll()
-        .then((books)=>{
-          let searchBooks = fromRawBooksToInfoBooks(books);
-          this.searchResultBooks = mergeSearchWithUserBooks(searchBooks,this.userBookStore);
-          this.forceUpdate();
-          resolve();
-        })
-        .catch(error=> reject(error));
-      }
-      else{
         search(text)
         .then((books)=>{
             let searchBooks = fromRawBooksToInfoBooks(books);
-            //let s = { searchResults : mergeSearchWithUserBooks(searchBooks,this.userBookStore)};
-            //this.setState(s);
             this.searchResultBooks = mergeSearchWithUserBooks(searchBooks,this.userBookStore);
-            //this.userBookStore = s;
             this.forceUpdate();
             resolve();
         })
         .catch(error=> reject(error));
-      }
     });
     return p;
 }
 
 closeSearch = ()=>{
-  this.userBookStore = mergeUserBooksWithSearch(this.searchResultBooks,this.userBookStore);
+//  this.userBookStore = mergeUserBooksWithSearch(this.searchResultBooks,this.userBookStore);
   this.searchResultBooks =null;
   this.setState({searchOpened:false});
+  this.getAllUserBooks();
 }
 openSearch =()=>{
   this.setState({searchOpened:true});
-//  this.searchOpened=true;
 }
-
+/*
 drawShelves = ()=> {
   const infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
   const infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
@@ -91,11 +99,11 @@ drawShelves = ()=> {
       <BookShelfComponent  info={infoRead}/>
     </div>
   );
-}
+}*/
   render(){
-    const infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
-    const infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
-    const infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
+    const infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.updateBookStatus} ;
+    const infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.updateBookStatus}       
+    const infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.updateBookStatus}       
   
     return (
       <div className="App">
@@ -105,13 +113,18 @@ drawShelves = ()=> {
           <span>&copy; 2021 Khaled Saleh</span>
         </header>
           { this.state.searchOpened &&
-            (<SearchComponent search={this.applySearch} close={this.closeSearch} searchResults={this.searchResultBooks}></SearchComponent>)
+            (<SearchComponent search={this.applySearch} close={this.closeSearch} 
+              searchResults={this.searchResultBooks} updateBook={this.updateBookStatus}
+              >
+
+              </SearchComponent>)
           }
            
            {
             this.state.searchOpened===false && 
             (
               <div>
+                <div className="loader" style={{display:this.state.inProgressUpdate?'block':'none'}}></div>
                 <BookShelfComponent  info={infoWanttoRead}/> 
                 <BookShelfComponent  info={infoCurentlyReading}/> 
                 <BookShelfComponent  info={infoRead}/>

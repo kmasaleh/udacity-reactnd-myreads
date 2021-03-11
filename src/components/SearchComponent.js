@@ -50,7 +50,7 @@ class SearchComponent extends  Component{
         let info ={
             books:this.props.searchResults,
             title:'Search Results',
-            refresh:null
+            refresh:this.props.updateBook
         };
         return (
             <div>
