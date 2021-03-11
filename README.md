@@ -1,4 +1,7 @@
-# Udacity Advanced Web Development Nano Degree MyRead Project  
+
+
+# Udacity Advanced Web Development Nano Degree 
+# MyReads: A Book Lending App
 ### Author : Khaaled Saleh  
 ###  Date:   11/03/2021  
 
