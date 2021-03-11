@@ -81,9 +81,9 @@ openSearch =()=>{
 }
 
 drawShelves = ()=> {
-  var infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
-  var infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
-  var infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
+  const infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
+  const infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
+  const infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
   return (
     <div>
       <BookShelfComponent  info={infoWanttoRead}/> 
@@ -93,12 +93,17 @@ drawShelves = ()=> {
   );
 }
   render(){
-    var infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
-    var infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
-    var infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
+    const infoWanttoRead = { books :this.getWanttoReadBooks(),title:"Want To Read", refresh:this.refreshViews} ;
+    const infoCurentlyReading = { books :this.getReadingBooks(),title:"Currently Reading", refresh:this.refreshViews}       
+    const infoRead = { books :this.getReadBooks(),title:"Read", refresh:this.refreshViews}       
   
     return (
       <div className="App">
+
+        <header>
+            MyReads
+          <span>&copy; 2021 Khaled Saleh</span>
+        </header>
           { this.state.searchOpened &&
             (<SearchComponent search={this.applySearch} close={this.closeSearch} searchResults={this.searchResultBooks}></SearchComponent>)
           }

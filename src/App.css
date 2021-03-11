@@ -14,3 +14,16 @@
   font-size: 64;
   color: red;
 }
+
+header{
+  left: 0;
+  top:0;
+  height: 70px;
+  width: 100%;
+  background-color:rgb(29, 88, 214);
+  color: white;
+  font-size: 2em;  
+}
+header span{
+  font-size: small;
+}
